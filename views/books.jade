@@ -1,0 +1,31 @@
+extends layout
+
+block content
+	h1= title
+	p Welcome to #{title}
+	div(data-inline=true)
+		form(action='/books/create', method='POST')
+			div(data-role='fieldcontain')
+				fieldset(data-role='controlgroup')
+					label User-email:
+						input(type='text', id='email', name='email')
+			div(data-role='fieldcontain')
+				fieldset(data-role='controlgroup')
+					label name:
+						input(type='text', id='name', name='name')
+			div(data-role='fieldcontain')
+				fieldset(data-role='controlgroup')
+					label description:
+						input(type='text', id='description', name='description')
+			div(data-role='fieldcontain)
+				fieldset(data-role='controlgroup')
+					label +:
+						input(type='submit', value='Go!')
+
+	p Books
+	div(data-inline=true)
+		for book in books
+			p #{book.name}
+			label Owner: #{book.owner_email}
+			label Description: #{book.description}
+			a(href='/book/#{book.uuid}') Link!

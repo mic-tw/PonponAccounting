@@ -1,0 +1,25 @@
+extends layout
+
+block content
+	div(data-inline=true)
+		form(action='/expense', method='POST')
+			div(data-role='fieldcontain')
+				fieldset(data-role='controlgroup')
+					label Expense:
+						input(type='text', id='money', name='money')
+			div(data-role='fieldcontain')
+				fieldset(data-role='controlgroup')
+					label Account:
+						input(type='text', id='account', name='account')
+			div(data-role='fieldcontain')
+				fieldset(data-role='controlgroup')
+					label Tags:
+						input(type='text', id='tags', name='tags')
+			div(data-role='fieldcontain')
+				fieldset(data-role='controlgroup')
+					label Description:
+						input(type='text', id='description', name='description')
+			div(data-role='fieldcontain)
+				fieldset(data-role='controlgroup')
+					label +:
+						input(type='submit', value='Go!')

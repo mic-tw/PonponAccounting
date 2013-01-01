@@ -1,0 +1,126 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.clear{	
+	float: none !important;
+	clear: both !important;
+	display: block !important;
+	line-height: 0;
+	padding: 0 !important;
+}
+
+.input-query-container{
+	padding: 0 20px 0 20px;
+}
+
+.input-fields-container{
+	float: left;
+}
+
+.input-query-submit{
+	float: right;
+}
+
+
+.input-fields-container .fields{
+	float: left;
+	margin-left: 10px;
+}
+
+<!-- Account Tags -->
+
+.list-canvas {
+	width: 20em;
+}
+
+.ui-tabs-vertical { width: 55em; }
+
+.ui-tabs-vertical .ui-tabs-nav { 
+	padding: .2em .1em .2em .2em; float: left; width: 12em; 
+}
+
+.ui-tabs-vertical .ui-tabs-nav li {
+	clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; 
+}
+
+.ui-tabs-vertical .ui-tabs-nav li a { 
+	display:block; 
+}
+
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { 
+	padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; 
+}
+
+.ui-tabs-vertical .ui-tabs-panel { 
+	padding: 1em; float: right; width: 40em;
+}
+
+
+<!-- Transactions  -->
+
+.list {
+}
+
+.list .row .view {
+	border: solid 1px #EEE;
+}
+
+.list .row .view div{
+	display: inline-block;
+}
+
+.list .row .view .type{
+	text-align: right;
+	padding-right: 10px;
+	width: 80px;
+}
+
+.list .row .view .tags {
+}
+
+.list .row .view .tags span{
+	margin-left: 5px;
+}
+
+.list .row .view .tags span:HOVER{
+	background-color: #EEE;
+}
+
+.list .row .view .amount {
+	margin-left: 10px;
+	font-weight: bolder;
+	color: #444;
+	width: 100px; 
+}
+
+.list .row .view .sum {
+	padding-left: 10px;
+	color: #AAA;
+	width: 100px;
+}
+
+.list .row .view .description {
+	margin-left: 10px; 
+}
+
+.list .row .view .income .amount{
+	background-color: #AFA;
+}
+
+.list .row .view .expense .amount{
+	background-color: #F77;
+}
+
+.list .row .view .reset .amount{
+	background-color: #AAA;
+}
+
+.list .row .view .transfer .amount{
+	background-color: #66E;
+}
