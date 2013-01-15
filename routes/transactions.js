@@ -13,6 +13,17 @@
  var find_book = function(uuid, callback){
  	Books.find({uuid: uuid}, callback);
  };
+ 
+ var convert_tags = function(input_str){
+ 	var arr = [], out = [];
+ 	if(input_str){
+ 		arr = input_str.split(' ');
+ 	}
+ 	for(var i = 0 ; i < arr.length ; i++){
+ 		out.push({content: arr[i]});
+ 	}
+ 	return out;
+ };
   
  var ensure_account = function(book_uuid, accountName, callback){
  	Books.find({uuid: book_uuid}, function(err, books){
@@ -42,7 +53,8 @@
  var income = function(req, res, next){
  	console.log('income: ' + req.params.bookid);
  	ensure_account(req.params.bookid, req.body.account, function(book, account){
- 		console.log('transaction.income book: ' + book + ' account ' + account + ' tags: ' + req.body.tags);
+ 		console.log('transaction.income book: ' + book + ' account ' + account + ' tags: ' + req.body.tags + ' date:' + req.body.record_date);
+
  		Transactions.find({
  		}, function(err, transactions){
  			new Transactions({
@@ -50,10 +62,10 @@
  				account: account,
  				type: Types.income,
  				money: req.body.money,
- 				tags: req.body.tags,
+ 				tags: convert_tags(req.body.tags),
  				description: req.body.description,
- 			//date: new Timestamp(req.body.date),
- 				ordinal: transactions.length,
+ 				record_time: new Date(req.body.record_date),
+ 				taken_time: new Date(req.body.taken_date)
  			}).save(function(err, transaction){
  				console.log('transaction.income ' + err);
  				console.log(transaction);
@@ -73,10 +85,10 @@
  				account: account,
  				type: Types.expense,
  				money: req.body.money,
- 				tags: req.body.tags,
+ 				tags: convert_tags(req.body.tags),
  				description: req.body.description,
- 			//date: new Timestamp(req.body.date),
- 				ordinal: transactions.length,
+ 				record_time: new Date(req.body.record_date),
+ 				taken_time: new Date(req.body.taken_date)
  			}).save(function(err, transaction, count){
  				res.redirect('/book/' + req.params.bookid);
  			});
@@ -96,11 +108,11 @@
  					target: target,
  					type: Types.transfer,
  					money: req.body.money,
- 					tags: req.body.tags,
+ 					tags: convert_tags(req.body.tags),
  					fee: req.body.fee,
  					description: req.body.description,
- 					//date: new Timestamp(req.body.date),
- 					ordinal: transactions.length,
+ 					record_time: new Date(req.body.record_date),
+ 					taken_time: new Date(req.body.taken_date)
  				}).save(function(err, transaction, count){
  					res.redirect('/book/' + req.params.bookid);
  				});
@@ -119,9 +131,10 @@
  				account: account,
  				type: Types.reset,
  				money: req.body.money,
- 				tags: req.body.tags,
+ 				tags: convert_tags(req.body.tags),
  				description: req.body.description,
- 				//date: new Timestamp(req.body.date),
+ 				record_time:  new Date(req.body.record_date),
+ 				taken_time:  new Date(req.body.record_date),
  				ordinal: transactions.length,
  			}).save(function(err, transaction){
  				res.redirect('/book/' + req.params.bookid);
@@ -148,7 +161,6 @@
   
  var list = function(req, res, next){
  	console.log('transactions.list ' + req.params.bookid);
- 	//console.log(req.param);
  	Books.find({uuid: req.params.bookid}, function(err, books){
  		if(err){
  			return next(err);
@@ -161,11 +173,6 @@
  			if(err){
  				return next(err);
  			}
- 			for(var idx = 0 ; idx < transactions.length ; idx++){
- 				if(transactions[idx].tags){
- 					transactions[idx].tags_array =  transactions[idx].tags.split(' ');
- 				}
- 			}
  			
  			Accounts.find(
  				{book: books[0]}, 
@@ -174,7 +181,7 @@
  						accounts = [];
  					}
 					res.render('transactions', {
-						title: 'BookName',
+						title: books[0].name,
 						accounts: accounts,
 						book: {name: books[0].name, uuid: req.params.bookid},
 						types: Types,
@@ -222,7 +229,7 @@
  					}
  				}
 				res.render('transactions', {
-					title: 'BookName',
+					title: books[0].name,
 					book: {name: books[0].name, uuid: books[0].uuid},
 					accounts: accounts,
 					account: account,

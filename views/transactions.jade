@@ -1,97 +1,113 @@
 extends layout
 
-head
-	script(src="http://code.jquery.com/jquery-1.8.3.js")
-	script(src="http://code.jquery.com/ui/1.9.2/jquery-ui.js")
-	link(rel="stylesheet", href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css")
-	link(rel='stylesheet', href='/stylesheets/style.css')
+block inner-script
+	script(type="text/javascript", src='/javascripts/transaction.js')
+	script
+		$(function() {
+			$( "#record_date" ).datepicker();
+			$( "#taken_date" ).datepicker();
+		});
+
 
 block content
 	h1= title
 	p #{book.name}
-	div.input-query-container(data-inline=true)
-		form(action='/book/#{book.uuid}/transaction', method='POST')
-			div.input-fields-container
-				div.fields(data-role='fieldcontain')
-					fieldset(data-role='controlgroup')
-						label Type:
-							select(name='type')
-								- for v, t in types
-									option(value=t) #{v}
-				div.fields(data-role='fieldcontain')
-					fieldset(data-role='controlgroup')
-						label tags:
-							input(type='text', id='tags', name='tags')
-				div.fields(data-role='fieldcontain')
-					fieldset(data-role='controlgroup')
-						label money:
-							input(type='text', id='money', name='money')
-				div.fields(data-role='fieldcontain')
-					fieldset(data-role='controlgroup')
-						label Account:
-							input(type='text', id='account', name='account')
-				div.fields(data-role='fieldcontain', visibility=true)
-					fieldset(data-role='controlgroup')
-						label Account:
-							input(type='text', id='target', name='target')
-				div.fields(data-role='fieldcontain')
-					fieldset(data-role='controlgroup')
-						label description:
-							input(type='text', id='description', name='description')
-				div.clear
-			div.input-query-submit
-				div(data-role='fieldcontain)
-					fieldset(data-role='controlgroup')
-						label +:
-							input(type='submit', value='Go!')
-			div.clear
+	div
+		div.row-fluid.input-query-container(data-inline=true)
+			form(action='/book/#{book.uuid}/transaction', method='POST')
+				div.input-fields-container.span12
+					div.span10
+						div.row-fluid
+							div.fields.input-prepend.span2
+								label.span4.add-on Type
+								select.span8(name='type')
+									- for v, t in types
+										option(value=t) #{v}
+							div.fields.input-prepend.span2
+								label.span4.add-on Tags
+								input.span8(type='text', id='tags', name='tags')
+							div.fields.input-prepend.span1
+								label.span4.add-on $
+								input.span8(type='text', id='money', name='money')
+							div.fields.input-prepend.span2
+								label.span4.add-on description
+								input.span8(type='text', id='description', name='description')
+							div.fields.input-prepend.span1
+								label.span4.add-on Account
+								input.span8(type='text', id='account', name='account')
+							div.fields.input-prepend.span2
+								label.span4.add-on Target-account
+								input.span8(type='text', id='target', name='target')
+						div.row-fluid
+							div.fields.span4
+								label.checkbox Floating transaction?
+									input(type='checkbox', id='floating')
+					div.span1
+						div.row-fuild
+							div.fields.input-prepend.span12
+								a.span4.add-on
+									i.icon-calendar.icon-white
+								input.span8(type='text', id='record_date', name='record_date')
+						div.row-fuild
+							div.fields.input-prepend.span12
+								label.span4.add-on Taken date
+								input.span8(type='text', id='taken_date', name='taken_date')
+					div.span1
+						input.fields.btn.btn-primary(type='submit', value='ADD')
 
-	div(data-inline=true, id='tabs', class=['list-canvas ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-vertical ui-helper-clearfix'])
-		ul(class=['ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all'])
-			li(class=['ui-state-default ui-tabs-active ui-state-active ui-corner-left'])
-				a(class=['ui-tabs-anchor'], href='/book/#{book.uuid}') All accounts
-			for account in accounts
-				li(class=['ui-state-default ui-tabs-active ui-state-active ui-corner-left'])
-					a(class=['ui-tabs-anchor'], href='/book/#{book.uuid}/#{account.name}') #{account.name}
+		div.row-fluid.list(data-inline=true, id='tabs')
+			div.span2
+				div.tabbable.tabs-left
+					ul.nav.nav-tabs
+						li.active
+							a(href='/book/#{book.uuid}') All accounts
+						for account in accounts
+							li
+								a(href='/book/#{book.uuid}/#{account.name}') #{account.name}
 
-		div(data-inline=true, class=['list ui-tabs-panel ui-widget-content ui-corner-bottom'])
-			div(class='row')
-				div(class='view')
-					div(class='head')
-						div(class='type') Type
-						div(class='amount') Amount
-						div(class='sum') Sum
-						div(class='tags') Tags
-						div(class='description') Description
-			- var sum = 0 
-			for transaction in transactions
-				- var typeClass
-				case transaction.type
-					when 'Expense'
-						- sum -= transaction.money
-						- typeClass = 'expense'
-					when 'Income'
-						- sum += transaction.money
-						- typeClass = 'income'
-					when 'BalanceReset'
-						- sum = transaction.money
-						- typeClass = 'reset'
-					when 'Transfer'
-						div.tranfer
-						- sum +=0
-						- typeClass = 'transfer'
-				div(class='row')
+			div.span6
+				div.row-fluid
 					div(class='view')
-						div(data-inline=true, class=[typeClass])
-							div(class=['type'])
-								| #{transaction.type}
-							div(class=['amount'])
-								| #{transaction.money}
-							div(class=['sum'])
-								| #{sum}
-							div(class=['tags'])
-								- var tags = transaction.tags_array
-								for tag in tags
-									span #{tag}
-							div(class=['description'])
-								| #{transaction.description}
+						div(class='head')
+							div(class='span2 type') Type
+							div(class='span2 amount') Amount
+							div(class='span2 sum') Sum
+							div(class='span2 tags') Tags
+							div(class='span2 description') Description
+							div(class='span2 record_date') Date
+				- var sum = 0 
+				for transaction in transactions
+					- var typeClass
+					case transaction.type
+						when 'Expense'
+							- sum -= transaction.money
+							- typeClass = 'expense'
+						when 'Income'
+							- sum += transaction.money
+							- typeClass = 'income'
+						when 'BalanceReset'
+							- sum = transaction.money
+							- typeClass = 'reset'
+						when 'Transfer'
+							div.tranfer
+							- sum +=0
+							- typeClass = 'transfer'
+					div.row-fluid
+						div(class='view')
+							div(data-inline=true, class=[typeClass])
+								div(class='span2 type')
+									| #{transaction.type}
+								div(class='span2 amount')
+									| #{transaction.money}
+								div(class='span2 sum')
+									| #{sum}
+								div(class='span2 tags')
+									- var tags = transaction.tags
+									for tag in tags
+										span #{tag.content}
+								div(class='span2 description')
+									| #{transaction.description}
+								div(class='span2 record_date')
+									| #{transaction.record_time.toDateString()}
+
+			div.span4

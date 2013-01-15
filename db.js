@@ -26,7 +26,8 @@
  mongoose.model('Accounts', Accounts);
  
  //var Tags = new Schema({
-// 	content	: String
+// 	content	: String,
+// 	transactions: [Transactions]
  //}); 
  //mongoose.model('Tags', Tags);
  
@@ -37,10 +38,11 @@
  	type	: {type: String, required: true},
  	money	: {type: Number, required: true},
  	fee		: {type: Number, default: 0},
- 	tags	: {type: String, default: ''},
+ 	tags	: [{content: String}],
  	description	: {type: String, default: ''},
- 	date	: {type: Date, default: Date.now},
- 	ordinal	: Number
+ 	record_time	: {type: Date, required: true},
+ 	taken_time : {type: Date, required: true},
+ 	updated_time: {type: Date, default: Date.now}
  });
  mongoose.model('Transactions', Transactions);
  
